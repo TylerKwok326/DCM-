@@ -8,18 +8,19 @@ Time series extraction generated DCM-compatible data structures with dimensions 
 
 DCM requires explicit specification of experimental inputs that drive neural responses. Three input functions were designed based on the gambling task structure:
 
-Input 1 (Driving): Game onset events modeled as delta functions at trial initiation (750ms post-fixation), representing sensory-cognitive input that directly drives neural activity.
-Input 2 (Modulatory): Choice type context, coded as sustained binary signals (1 for gamble choices, 0 for safe bet choices) lasting from stimulus presentation to choice execution, representing contextual modulation of connectivity.
-Input 3 (Modulatory): Outcome valence, coded as transient signals (1 for win outcomes, 0 for loss outcomes) lasting 500ms post-outcome revelation, representing feedback-based connectivity modulation.
+- Input 1 (Driving): Game onset events modeled as delta functions at trial initiation (750ms post-fixation), representing sensory-cognitive input that directly drives neural activity.
+- Input 2 (Modulatory): Choice type context, coded as sustained binary signals (1 for gamble choices, 0 for safe bet choices) lasting from stimulus presentation to choice execution, representing contextual modulation of connectivity.
+- Input 3 (Modulatory): Outcome valence, coded as transient signals (1 for win outcomes, 0 for loss outcomes) lasting 500ms post-outcome revelation, representing feedback-based connectivity modulation.
+  
 Input validation confirmed appropriate event counts (180 game onsets, 224,000 choice-type samples, 11,500 outcome samples) and correct temporal alignment with neural data.
 
 ### 3) Network Architecture Design
 
 Based on theoretical considerations of OFC functional organization, a 2-electrode network architecture with bidirectional connections was specified. The connectivity structure included:
 
-A Matrix (Intrinsic Connectivity): A 2×2 matrix encoding baseline connectivity between electrodes, with diagonal elements representing self-connections (decay rates) and off-diagonal elements representing inter-electrode coupling.
-B Matrices (Modulatory Connectivity): A 3×2×2 tensor encoding input-dependent connectivity changes, with separate matrices for each experimental input's modulatory effects.
-C Matrix (Driving Connectivity): A 2×3 matrix specifying which inputs directly drive each electrode, with the primary driving input (game onset) affecting both electrodes.
+- A Matrix (Intrinsic Connectivity): A 2×2 matrix encoding baseline connectivity between electrodes, with diagonal elements representing self-connections (decay rates) and off-diagonal elements representing inter-electrode coupling.
+- B Matrices (Modulatory Connectivity): A 3×2×2 tensor encoding input-dependent connectivity changes, with separate matrices for each experimental input's modulatory effects.
+- C Matrix (Driving Connectivity): A 2×3 matrix specifying which inputs directly drive each electrode, with the primary driving input (game onset) affecting both electrodes.
 Network architecture visualization confirmed physiologically plausible connectivity patterns, with appropriate parameter constraints ensuring system stability.
 
 ### 4) Model Specification and Forward Modeling
@@ -28,9 +29,9 @@ The DCM forward model was implemented using Euler integration of the bilinear di
 
 ECoG-specific adaptations included:
 
-Faster temporal scaling (2.0s⁻¹ vs. 1.0s⁻¹ for fMRI) to account for direct neural measurement.
-Elimination of hemodynamic modeling components, as ECoG directly measures neural activity.
-Adjustment of prior distributions to reflect ECoG noise characteristics and physiological constraints.
+- Faster temporal scaling (2.0s⁻¹ vs. 1.0s⁻¹ for fMRI) to account for direct neural measurement.
+- Elimination of hemodynamic modeling components, as ECoG directly measures neural activity.
+- Adjustment of prior distributions to reflect ECoG noise characteristics and physiological constraints.
 Parameter constraints were strategically applied to reduce model complexity while preserving key hypotheses. A total of 9 free parameters were estimated: 4 intrinsic connectivity parameters, 3 modulatory parameters, and 2 driving parameters.
 
 ### 5) Bayesian Parameter Estimation
@@ -39,6 +40,6 @@ Parameter estimation employed maximum a posteriori (MAP) estimation using L-BFGS
 
 Prior specifications included:
 
-Weakly informative priors on connectivity parameters (mean = 0, variance = 0.25).
-Stability constraints ensuring negative real eigenvalues of the A matrix.
-Parameter bounds preventing unrealistic connectivity strengths.
+- Weakly informative priors on connectivity parameters (mean = 0, variance = 0.25).
+- Stability constraints ensuring negative real eigenvalues of the A matrix.
+- Parameter bounds preventing unrealistic connectivity strengths.
